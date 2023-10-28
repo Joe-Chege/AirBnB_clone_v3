@@ -85,7 +85,7 @@ class TestBaseModel(unittest.TestCase):
         tic1 = datetime.now()
         inst1 = BaseModel()
         toc1 = datetime.now()
-        time.sleep(1)
+        time.sleep(2)
         tic2 = datetime.now()
         inst2 = BaseModel()
         toc2 = datetime.now()
