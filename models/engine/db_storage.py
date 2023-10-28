@@ -77,9 +77,22 @@ class DBStorage:
 
     
     def get(self, cls, id):
-            """Implement getmethod logic"""
-            pass
-    
+        """Retrieve one object from the database"""
+        if cls and id:
+            key = '{}.{}'.format(cls.__name__, id)
+            return self.__session.query(cls).filter(cls.id == id).first()
+        return None
     def count(self, cls=None):
-            """Implement count method logic"""
-            pass
+        """Count the number of objects in the database"""
+        if cls:
+            return self.__session.query(cls).count()
+        total_count = 0
+        for clss in classes.values():
+            total_count += self.__session.query(clss).count()
+        return total_count
+
+
+
+
+
+

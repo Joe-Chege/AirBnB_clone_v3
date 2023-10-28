@@ -70,8 +70,14 @@ class FileStorage:
         self.reload()
 
     def get(self, cls, id):
-        """Implement get method logic"""
-        pass
+        """Retrieve one object from the file storage"""
+        if cls and id:
+            key = '{}.{}'.format(cls.__name__, id)
+            return self.__objects.get(key, None)
+        return None
+
     def count(self, cls=None):
-        """Implement count method logic"""
-        pass
+        """Count the number of objects in the file storage"""
+        if cls:
+            return len([obj for obj in self.__objects.values() if isinstance(obj, cls)])
+        return len(self.__objects)
