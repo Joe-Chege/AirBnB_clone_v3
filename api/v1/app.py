@@ -42,7 +42,7 @@ def not_found(error):
               error: Not found
     """
     return make_response(jsonify({'error': "Not found"}), 404)
-}
+
 
 Swagger(app)
 
