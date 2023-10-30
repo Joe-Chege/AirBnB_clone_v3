@@ -22,13 +22,26 @@ def close_db(error):
 
 @app.errorhandler(404)
 def not_found(error):
-    """description: a resource was not found"""
+    """Handles 404 errors.
+    
+    This endpoint is triggered when a requested resource is not found.
+    
+    ---
+    responses:
+      404:
+        description: A resource was not found.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                  description: Error message indicating the resource was not found.
+            example:
+              error: Not found
+    """
     return make_response(jsonify({'error': "Not found"}), 404)
-
-
-app.config['SWAGGER'] = {
-    'title': 'AirBnB clone Restful API',
-    'uiversion': 3
 }
 
 Swagger(app)
