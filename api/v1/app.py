@@ -6,7 +6,6 @@ from os import environ
 from flask import Flask, render_template, make_response, jsonify
 from flask_cors import CORS
 from flasgger import Swagger
-from flasgger.utils import swag_from
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
@@ -23,9 +22,9 @@ def close_db(error):
 @app.errorhandler(404)
 def not_found(error):
     """Handles 404 errors.
-    
+
     This endpoint is triggered when a requested resource is not found.
-    
+
     ---
     responses:
       404:
@@ -37,7 +36,7 @@ def not_found(error):
               properties:
                 error:
                   type: string
-                  description: Error message indicating the resource was not found.
+                  description: Error message indicating not found.
             example:
               error: Not found
     """
