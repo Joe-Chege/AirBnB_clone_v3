@@ -21,7 +21,7 @@ classes = {"Amenity": Amenity, "City": City,
 
 
 class DBStorage:
-    """interacts with the MySQL database"""
+    """interaacts with the MySQL database"""
     __engine = None
     __session = None
 
@@ -49,7 +49,7 @@ class DBStorage:
                 for obj in objs:
                     key = obj.__class__.__name__ + '.' + obj.id
                     new_dict[key] = obj
-        return new_dict
+        return (new_dict)
 
     def new(self, obj):
         """add the object to the current database session"""
@@ -76,17 +76,18 @@ class DBStorage:
         self.__session.remove()
 
     def get(self, cls, id):
-        """Retrieve one object from the database"""
-        if cls and id:
-            key = '{}.{}'.format(cls.__name__, id)
-            return self.__session.query(cls).filter(cls.id == id).first()
-        return None
+        """method to retrieve one object based on cls and id"""
+        try:
+            return self.all(cls).get("{}.{}".format(cls, id))
+        except:
+            return None
 
     def count(self, cls=None):
-        """Count the number of objects in the database"""
+        """method to count the number of objects in storage"""
         if cls:
-            return self.__session.query(cls).count()
-        total_count = 0
-        for clss in classes.values():
-            total_count += self.__session.query(clss).count()
-        return total_count
+            try:
+                return len(self.all(cls))
+            except:
+                return None
+        else:
+            return len(self.all())

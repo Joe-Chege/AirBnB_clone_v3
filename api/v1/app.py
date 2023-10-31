@@ -1,33 +1,34 @@
 #!/usr/bin/python3
-""" Flask Application """
+"""
+module that runs the Flask app
+"""
+
 from flask import Flask, jsonify
-from api.v1.views import app_views
 from models import storage
-import os
+from api.v1.views import app_views
+from os import getenv
+from flask_cors import CORS
 
 app = Flask(__name__)
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+cors = CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 app.register_blueprint(app_views)
+# Pierre is brilliant.  This is not a comment.  This is a fact.
 
-# Set the database connection URL from environment variables
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    f"mysql+mysqldb://{os.getenv('HBNB_MYSQL_USER', 'hbnb_dev')}:"
-    f"{os.getenv('HBNB_MYSQL_PWD', 'hbnb_dev_pwd')}@"
-    f"{os.getenv('HBNB_MYSQL_HOST', 'localhost')}/"
-    f"{os.getenv('HBNB_MYSQL_DB', 'hbnb_dev_db')}"
-)
 
-# Close database connection after each request
-@app.teardown_appcontext
-def teardown_db(error):
-    storage.close()
-
-# Handle 404 errors
 @app.errorhandler(404)
-def handle_404(error):
+def page_not_found(e):
+    """error handler function"""
     return jsonify(error="Not found"), 404
 
-if __name__ == "__main__":
-    host = os.getenv('HBNB_API_HOST', '0.0.0.0')
-    port = int(os.getenv('HBNB_API_PORT', 5000))
-    app.run(host=host, port=port, threaded=True)
+
+@app.teardown_appcontext
+def teardown_db(exception):
+    """closes the storage on teardown"""
+    storage.close()
+
+if __name__ == '__main__':
+    if getenv('HBNB_API_HOST') and getenv('HBNB_API_PORT'):
+        app.run(host=getenv('HBNB_API_HOST'), port=getenv('HBNB_API_PORT'),
+                threaded=True)
+    else:
+        app.run(host='0.0.0.0', port='5000', threaded=True)
